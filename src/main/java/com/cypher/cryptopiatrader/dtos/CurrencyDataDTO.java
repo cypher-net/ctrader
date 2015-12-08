@@ -18,7 +18,6 @@ public class CurrencyDataDTO {
     public CurrencyDataDTO() {
     }
     
-
     public int getId() {
         return id;
     }

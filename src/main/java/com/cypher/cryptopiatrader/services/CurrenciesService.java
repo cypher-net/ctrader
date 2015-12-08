@@ -10,7 +10,9 @@ import com.cypher.cryptopiatrader.exceptions.RestException;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import org.json.JSONObject;
+import java.io.IOException;
+import org.codehaus.jackson.map.DeserializationConfig;
+import org.codehaus.jackson.map.ObjectMapper;
 
 /**
  *
@@ -39,7 +41,7 @@ public class CurrenciesService extends CriptopiaTraderBaseService {
         return currenciesDTO;
     }
     */
-    public static CurrenciesDTO getCurrencies() throws RestException{
+    public static CurrenciesDTO getCurrencies() throws RestException, IOException{
         ClientResponse response = null;        
         try {
             Client client = Client.create();
@@ -53,7 +55,14 @@ public class CurrenciesService extends CriptopiaTraderBaseService {
             throw new RestException(e);
         }
         
-        CurrenciesDTO currenciesDTO = response.getEntity(CurrenciesDTO.class);
+        String output = response.getEntity(String.class);
+        System.out.println(output);
+        
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        
+        
+        CurrenciesDTO currenciesDTO = mapper.readValue(output, CurrenciesDTO.class);
         return currenciesDTO;
     }
     
